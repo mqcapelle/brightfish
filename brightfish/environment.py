@@ -1,5 +1,5 @@
 import numpy as np
-from skimage.draw import circle
+from skimage.draw import disk
 from skimage.filters import gaussian
 
 
@@ -62,9 +62,8 @@ class Spotlight(Environment):
         self.spot_value = spot_value
         self.spot_radius = spot_radius
         # TODO: need to fix fish FOV to allow making use of aperture
-        aperture_rows, aperture_cols = circle(
-            int(self.shape[0] / 2),
-            int(self.shape[1] / 2),
+        aperture_rows, aperture_cols = disk(
+            (int(self.shape[0] / 2), int(self.shape[1] / 2)),
             int(self.shape[0] / 2),
             shape=self.shape,
         )
@@ -79,8 +78,8 @@ class Spotlight(Environment):
 
     def place_spot(self):
         self.stage.fill(0.0)
-        spot_rows, spot_cols = circle(
-            *self.spot_coordinate, self.spot_radius, shape=self.shape
+        spot_rows, spot_cols = disk(
+            (self.spot_coordinate[0], self.spot_coordinate[1]), self.spot_radius, shape=self.shape
         )
         self.stage[spot_rows, spot_cols] = self.spot_value
         self.stage = gaussian(self.stage)
